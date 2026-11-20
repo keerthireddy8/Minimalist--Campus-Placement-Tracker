@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Control Panel - Campus Placement Tracker</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="dashboard-wrapper">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-icon" style="background-color: var(--primary);">💼</div>
+        <span>Admin Panel</span>
+      </div>
+      
+      <!-- User Profile -->
+      <div class="sidebar-user">
+        <div class="sidebar-user-name">Administrator</div>
+        <span class="sidebar-user-role" id="admin-email-sidebar">admin@placement.com</span>
+      </div>
+      
+      <ul class="sidebar-menu">
+        <li class="sidebar-item active" data-view="view-stats">
+          <a href="#">📊 Placement Stats</a>
+        </li>
+        <li class="sidebar-item" data-view="view-manage-companies">
+          <a href="#">🏢 Corporate Partners</a>
+        </li>
+        <li class="sidebar-item" data-view="view-manage-students">
+          <a href="#">🎓 Student Directory</a>
+        </li>
+        <li class="sidebar-item" data-view="view-manage-applications">
+          <a href="#">📥 Applications Pipeline</a>
+        </li>
+      </ul>
+      
+      <div class="sidebar-footer">
+        <button id="btn-logout" class="btn btn-danger">
+          🚪 Logout Session
+        </button>
+      </div>
+    </aside>
+    
+    <!-- Main Dashboard Content -->
+    <main class="dashboard-main">
+      
+      <!-- Dashboard Header -->
+      <div class="dashboard-header">
+        <div class="dashboard-title">
+          <h1 id="admin-welcome">Admin Control Center</h1>
+          <p id="admin-date-label">Oversee real-time campus recruitments.</p>
+        </div>
+      </div>
+      
+      <!-- VIEW 1: Statistics Dashboard -->
+      <section id="view-stats" class="dashboard-view active">
+        <!-- 4-Stat Metric Cards -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">🎓</div>
+            <div class="stat-info">
+              <span class="stat-value" id="stat-total-students">0</span>
+              <span class="stat-label">Total Students</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background-color: var(--info-bg); color: var(--info);">🏢</div>
+            <div class="stat-info">
+              <span class="stat-value" id="stat-total-companies">0</span>
+              <span class="stat-label">Companies</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon warning">📥</div>
+            <div class="stat-info">
+              <span class="stat-value" id="stat-total-applications">0</span>
+              <span class="stat-label">Applications</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon success">⚡</div>
+            <div class="stat-info">
+              <span class="stat-value" id="stat-placed-percent">0%</span>
+              <span class="stat-label">Placement Rate</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Application Shortlist on Stats Screen -->
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Recent Activity Logs</h2>
+            <span class="text-muted" style="font-size: 0.8rem;">Live pipeline updates</span>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Student Name</th>
+                  <th>USN</th>
+                  <th>Applied Partner</th>
+                  <th>Assigned CTC</th>
+                  <th>Selection Status</th>
+                </tr>
+              </thead>
+              <tbody id="stats-recent-applications">
+                <!-- Loaded dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+      
+      <!-- VIEW 2: Manage Companies (CRUD Table) -->
+      <section id="view-manage-companies" class="dashboard-view">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Corporate Recruitment Programs</h2>
+            <button id="btn-add-company" class="btn btn-primary btn-sm">➕ Add New Partner</button>
+          </div>
+          
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Company Name</th>
+                  <th>Designated Role</th>
+                  <th>Compensation CTC</th>
+                  <th>Eligibility CGPA</th>
+                  <th>Application Limit</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="admin-companies-table">
+                <!-- Loaded dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+      
+      <!-- VIEW 3: Student Directory -->
+      <section id="view-manage-students" class="dashboard-view">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Enrolled Academic Profiles</h2>
+            <span class="badge placed" id="badge-total-students-count">0 Students</span>
+          </div>
+          
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Student Name</th>
+                  <th>USN ID</th>
+                  <th>Department</th>
+                  <th>GPA Profile</th>
+                  <th>Skills Checklist</th>
+                  <th>Placement Badge</th>
+                </tr>
+              </thead>
+              <tbody id="admin-students-table">
+                <!-- Loaded dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+      
+      <!-- VIEW 4: Applications Pipeline & Status Selector -->
+      <section id="view-manage-applications" class="dashboard-view">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Recruitment Pipeline Manager</h2>
+            <span class="badge unplaced" id="badge-pending-applications">0 Records</span>
+          </div>
+          
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Candidate</th>
+                  <th>USN & Dept</th>
+                  <th>GPA Cutoff</th>
+                  <th>Applied Partner</th>
+                  <th>Job Title</th>
+                  <th>Recruitment Progress</th>
+                </tr>
+              </thead>
+              <tbody id="admin-applications-table">
+                <!-- Loaded dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+      
+    </main>
+  </div>
+
+  <!-- COMPANY ADD/EDIT MODAL -->
+  <div id="company-modal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modal-title-text" class="modal-title">Register Company Partner</h3>
+        <button id="modal-close-btn" class="modal-close">&times;</button>
+      </div>
+      
+      <form id="company-form" onsubmit="return false;">
+        <!-- Hidden input for ID when editing -->
+        <input type="hidden" id="form-company-id">
+        
+        <div class="form-group">
+          <label class="form-label" for="form-company-name">Company Name</label>
+          <input type="text" id="form-company-name" class="form-control" placeholder="Google Inc." required>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="form-company-role">Designated Role</label>
+          <input type="text" id="form-company-role" class="form-control" placeholder="Software Engineer" required>
+        </div>
+        
+        <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div>
+            <label class="form-label" for="form-company-package">Compensation Package</label>
+            <input type="text" id="form-company-package" class="form-control" placeholder="12 LPA" required>
+          </div>
+          <div>
+            <label class="form-label" for="form-company-min-cgpa">Minimum Cutoff CGPA</label>
+            <input type="number" step="0.1" min="0" max="10" id="form-company-min-cgpa" class="form-control" placeholder="7.5" required>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="form-company-deadline">Deadline for Application</label>
+          <input type="date" id="form-company-deadline" class="form-control" required>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="form-company-desc">Job Description & Skills Requirement</label>
+          <textarea id="form-company-desc" class="form-control" placeholder="Proficiency in Java, SQL, and problem solving." required></textarea>
+        </div>
+        
+        <div class="form-actions" style="margin-top: 24px; display:flex; gap:12px;">
+          <button type="button" id="btn-cancel-modal" class="btn btn-secondary" style="flex:1;">Cancel</button>
+          <button type="submit" id="btn-save-company" class="btn btn-primary" style="flex:1;">Save Partner</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modular Scripts -->
+  <script type="module" src="js/admin.js"></script>
+
+</body>
+</html>

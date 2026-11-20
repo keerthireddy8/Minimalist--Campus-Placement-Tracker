@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Registration - Campus Placement Tracker</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="auth-page">
+    
+    <!-- Left Decorative Sidebar -->
+    <div class="auth-sidebar" style="min-height: 100vh;">
+      <div class="auth-sidebar-logo">
+        <div class="logo-icon" style="background-color: rgba(255,255,255,0.15);">🎓</div>
+        <span>PlacementTracker</span>
+      </div>
+      
+      <div class="auth-sidebar-tagline">
+        <h2>Establish Your Profile</h2>
+        <p>Register as a student, enter your CGPA and skill inventory, and instantly view matches with recruiters.</p>
+      </div>
+      
+      <div class="auth-sidebar-footer">
+        <span>DBMS Mini Project | Powered by Firebase</span>
+      </div>
+    </div>
+    
+    <!-- Right Form Section -->
+    <div class="auth-content">
+      <div class="auth-card" style="max-width: 440px;">
+        
+        <div class="auth-header" style="margin-bottom: 24px;">
+          <h1>Create Student Profile</h1>
+          <p>Provide your official academic records to complete registration.</p>
+        </div>
+        
+        <form id="register-form" onsubmit="return false;">
+          
+          <div class="form-group">
+            <label class="form-label" for="reg-name">Full Name</label>
+            <input type="text" id="reg-name" class="form-control" placeholder="Aditi Sharma" required>
+          </div>
+
+          <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div>
+              <label class="form-label" for="reg-usn">USN (USN Format)</label>
+              <input type="text" id="reg-usn" class="form-control" placeholder="1RV22CS001" style="text-transform: uppercase;" required>
+            </div>
+            <div>
+              <label class="form-label" for="reg-branch">Academic Branch</label>
+              <select id="reg-branch" class="form-control" style="height: 43px;" required>
+                <option value="">Select Branch</option>
+                <option value="CSE">CSE</option>
+                <option value="ISE">ISE</option>
+                <option value="ECE">ECE</option>
+                <option value="EEE">EEE</option>
+                <option value="ME">Mech Eng</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div>
+              <label class="form-label" for="reg-cgpa">Current CGPA (0.0 - 10.0)</label>
+              <input type="number" step="0.01" min="0" max="10" id="reg-cgpa" class="form-control" placeholder="9.2" required>
+            </div>
+            <div>
+              <label class="form-label" for="reg-skills">Core Skills (Comma separated)</label>
+              <input type="text" id="reg-skills" class="form-control" placeholder="Java, SQL, React" required>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="reg-email">Institutional Email</label>
+            <input type="email" id="reg-email" class="form-control" placeholder="aditi@placement.com" required>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="reg-password">Choose Password (Min 6 chars)</label>
+            <input type="password" id="reg-password" class="form-control" placeholder="••••••••" required>
+          </div>
+          
+          <div class="form-actions">
+            <button type="submit" id="btn-register" class="btn btn-primary">Create Profile & Register</button>
+          </div>
+        </form>
+        
+        <div class="auth-footer">
+          Already have an account? <a href="login.html">Sign In instead</a>
+        </div>
+
+      </div>
+    </div>
+    
+  </div>
+
+  <!-- Scripts -->
+  <script type="module">
+    import { checkAuthState, registerStudent } from "./js/auth.js";
+    import { validateEmail, validateCGPA, isEmpty, showToast } from "./js/common.js";
+
+    // Run auth guard (redirect to dashboard if already logged in)
+    checkAuthState();
+
+    const registerForm = document.getElementById("register-form");
+    const nameInput = document.getElementById("reg-name");
+    const usnInput = document.getElementById("reg-usn");
+    const branchInput = document.getElementById("reg-branch");
+    const cgpaInput = document.getElementById("reg-cgpa");
+    const skillsInput = document.getElementById("reg-skills");
+    const emailInput = document.getElementById("reg-email");
+    const passwordInput = document.getElementById("reg-password");
+    const btnSubmit = document.getElementById("btn-register");
+
+    registerForm.addEventListener("submit", async () => {
+      const name = nameInput.value.trim();
+      const usn = usnInput.value.trim();
+      const branch = branchInput.value;
+      const cgpa = cgpaInput.value;
+      const skills = skillsInput.value.trim();
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+
+      // Validation check
+      if (isEmpty(name) || isEmpty(usn) || isEmpty(branch) || isEmpty(cgpa) || isEmpty(skills) || isEmpty(email) || isEmpty(password)) {
+        showToast("Validation Failed", "Please fill in all profile fields.", "warning");
+        return;
+      }
+
+      if (usn.length < 5) {
+        showToast("Validation Failed", "Please enter a valid USN.", "warning");
+        return;
+      }
+
+      if (!validateCGPA(cgpa)) {
+        showToast("Validation Failed", "CGPA must be a decimal score between 0.0 and 10.0.", "warning");
+        return;
+      }
+
+      if (!validateEmail(email)) {
+        showToast("Validation Failed", "Please provide a valid institutional email.", "warning");
+        return;
+      }
+
+      if (password.length < 6) {
+        showToast("Validation Failed", "Password must contain at least 6 characters.", "warning");
+        return;
+      }
+
+      btnSubmit.disabled = true;
+      try {
+        await registerStudent(email, password, name, usn, branch, cgpa, skills);
+      } catch (err) {
+        btnSubmit.disabled = false;
+      }
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Dashboard - Campus Placement Tracker</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="dashboard-wrapper">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-icon">🎓</div>
+        <span>PlacementTracker</span>
+      </div>
+      
+      <!-- Student profile quick summary -->
+      <div class="sidebar-user">
+        <div class="sidebar-user-name" id="sidebar-student-name">Loading Profile...</div>
+        <span class="sidebar-user-role" id="sidebar-student-usn">Fetching USN...</span>
+        <div style="margin-top: 10px;">
+          <span id="sidebar-student-status" class="badge unplaced">Unplaced</span>
+        </div>
+      </div>
+      
+      <ul class="sidebar-menu">
+        <li class="sidebar-item active" data-view="view-companies">
+          <a href="#">💼 Available Companies</a>
+        </li>
+        <li class="sidebar-item" data-view="view-applications">
+          <a href="#">📝 My Applications</a>
+        </li>
+        <li class="sidebar-item" data-view="view-profile">
+          <a href="#">👤 Academic Profile</a>
+        </li>
+      </ul>
+      
+      <div class="sidebar-footer">
+        <button id="btn-logout" class="btn btn-danger">
+          🚪 Logout Session
+        </button>
+      </div>
+    </aside>
+    
+    <!-- Main Dashboard Content -->
+    <main class="dashboard-main">
+      
+      <!-- Dashboard Header -->
+      <div class="dashboard-header">
+        <div class="dashboard-title">
+          <h1 id="welcome-header">Welcome back!</h1>
+          <p id="dashboard-date-label">Let's check your placements pipeline.</p>
+        </div>
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <div style="text-align: right;">
+            <div class="font-bold" style="font-size: 0.9rem;" id="header-student-name">Loading...</div>
+            <div class="text-muted" style="font-size: 0.75rem;" id="header-student-cgpa">CGPA: 0.00</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- View 1: Available Companies -->
+      <section id="view-companies" class="dashboard-view active">
+        <div class="card-header" style="padding-left: 0; padding-right: 0;">
+          <h2 class="card-title" style="font-size: 1.3rem;">Open Corporate Job Profiles</h2>
+          <p class="text-muted" style="font-size: 0.85rem;">Job profiles match eligibility conditions against your CGPA.</p>
+        </div>
+        
+        <!-- Active dynamic company card grid -->
+        <div id="company-card-container" class="company-grid">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </section>
+      
+      <!-- View 2: My Applications -->
+      <section id="view-applications" class="dashboard-view">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Applied Recruitment Cycles</h2>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Company</th>
+                  <th>Job Title</th>
+                  <th>CTC Package</th>
+                  <th>Applied On</th>
+                  <th>Current Status</th>
+                </tr>
+              </thead>
+              <tbody id="applications-table-body">
+                <!-- Populated dynamically via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+      
+      <!-- View 3: Academic Profile -->
+      <section id="view-profile" class="dashboard-view">
+        <div class="card" style="max-width: 600px;">
+          <div class="card-header">
+            <h2 class="card-title">Update Academic Credentials</h2>
+          </div>
+          
+          <form id="profile-update-form" onsubmit="return false;">
+            <div class="form-group">
+              <label class="form-label" for="profile-name">Full Name</label>
+              <input type="text" id="profile-name" class="form-control" required>
+            </div>
+            
+            <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+              <div>
+                <label class="form-label" for="profile-usn">University Seat Number (USN)</label>
+                <input type="text" id="profile-usn" class="form-control" disabled>
+              </div>
+              <div>
+                <label class="form-label" for="profile-branch">Department Branch</label>
+                <select id="profile-branch" class="form-control" required>
+                  <option value="CSE">CSE</option>
+                  <option value="ISE">ISE</option>
+                  <option value="ECE">ECE</option>
+                  <option value="EEE">EEE</option>
+                  <option value="ME">Mech Eng</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+              <div>
+                <label class="form-label" for="profile-cgpa">Cumulative CGPA (0.00 - 10.00)</label>
+                <input type="number" step="0.01" min="0" max="10" id="profile-cgpa" class="form-control" required>
+              </div>
+              <div>
+                <label class="form-label" for="profile-skills">Professional Skills (Comma list)</label>
+                <input type="text" id="profile-skills" class="form-control" required>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label" for="profile-email">Academic Email</label>
+              <input type="email" id="profile-email" class="form-control" disabled>
+            </div>
+            
+            <div class="form-actions" style="margin-top: 24px;">
+              <button type="submit" id="btn-save-profile" class="btn btn-primary">Save Profile Updates</button>
+            </div>
+          </form>
+        </div>
+      </section>
+      
+    </main>
+  </div>
+
+  <!-- Modular Scripts -->
+  <script type="module" src="js/student.js"></script>
+
+</body>
+</html>

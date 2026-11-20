@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In - Campus Placement Tracker</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="auth-page">
+    
+    <!-- Left Decorative Sidebar -->
+    <div class="auth-sidebar">
+      <div class="auth-sidebar-logo">
+        <div class="logo-icon" style="background-color: rgba(255,255,255,0.15);">🎓</div>
+        <span>PlacementTracker</span>
+      </div>
+      
+      <div class="auth-sidebar-tagline">
+        <h2>Secure Role Access</h2>
+        <p>A single, intelligent gateway for both students to apply and administrators to coordinate campaigns.</p>
+      </div>
+      
+      <div class="auth-sidebar-footer">
+        <span>DBMS Mini Project | Powered by Firebase</span>
+      </div>
+    </div>
+    
+    <!-- Right Form Section -->
+    <div class="auth-content">
+      <div class="auth-card">
+        
+        <div class="auth-header">
+          <h1>Welcome Back</h1>
+          <p>Enter your credentials to access your dashboard.</p>
+        </div>
+        
+        <form id="login-form" onsubmit="return false;">
+          <div class="form-group">
+            <label class="form-label" for="login-email">Email Address</label>
+            <input type="email" id="login-email" class="form-control" placeholder="name@college.com" required>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="login-password">Password</label>
+            <input type="password" id="login-password" class="form-control" placeholder="••••••••" required>
+          </div>
+          
+          <div class="form-actions">
+            <button type="submit" id="btn-login" class="btn btn-primary">Sign In</button>
+          </div>
+        </form>
+        
+        <div class="auth-footer">
+          Don't have a student account? <a href="register.html">Sign Up here</a>
+        </div>
+        
+        <!-- Short evaluator helper card -->
+        <div class="demo-seeder-box" style="margin-top: 32px; background-color: var(--bg-main); border-color: var(--border);">
+          <p style="color: var(--text-muted); font-size: 0.75rem; margin-bottom: 6px;">Evaluation Account Suggestions:</p>
+          <div style="font-size: 0.75rem; text-align: left; line-height: 1.4;">
+            <strong>Admin:</strong> <code>admin@placement.com</code> / password<br>
+            <strong>Student:</strong> <code>aditi@placement.com</code> / password
+          </div>
+        </div>
+
+      </div>
+    </div>
+    
+  </div>
+
+  <!-- Scripts -->
+  <script type="module">
+    import { checkAuthState, loginUser } from "./js/auth.js";
+    import { validateEmail, isEmpty, showToast } from "./js/common.js";
+
+    // Run auth guard (redirect to dashboard if already logged in)
+    checkAuthState();
+
+    const loginForm = document.getElementById("login-form");
+    const emailInput = document.getElementById("login-email");
+    const passwordInput = document.getElementById("login-password");
+    const btnSubmit = document.getElementById("btn-login");
+
+    loginForm.addEventListener("submit", async () => {
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+
+      // Validation
+      if (isEmpty(email) || isEmpty(password)) {
+        showToast("Validation Failed", "Please fill in all fields.", "warning");
+        return;
+      }
+
+      if (!validateEmail(email)) {
+        showToast("Invalid Email", "Please enter a valid email format.", "warning");
+        return;
+      }
+
+      if (password.length < 6) {
+        showToast("Password Too Short", "Password must contain at least 6 characters.", "warning");
+        return;
+      }
+
+      btnSubmit.disabled = true;
+      try {
+        await loginUser(email, password);
+      } catch (err) {
+        // Errors are logged/toasted inside loginUser, reset button state
+        btnSubmit.disabled = false;
+      }
+    });
+  </script>
+
+</body>
+</html>
